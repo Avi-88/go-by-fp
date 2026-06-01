@@ -1,4 +1,4 @@
-# FAFO — 30 Days of Fundamentals
+# Go by First Principles — 30 Days of Fundamentals
 
 
 ## Structure
