@@ -1,0 +1,1 @@
+{"AppName":"fafo","Port":8080,"Debug":true,"Database":{"Host":"localhost","Port":5432,"Name":"fafo_db","Password":"secret"},"AllowedOrigins":["http://localhost:3000","https://example.com"]}
