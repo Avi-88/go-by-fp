@@ -1,6 +1,5 @@
 # FAFO — 30 Days of Fundamentals
 
-Go-first, Python-mirrored. Write everything by hand.
 
 ## Structure
 
@@ -20,8 +19,7 @@ python/
 1. No copy-paste. Type everything.
 2. Break it intentionally. Then fix it.
 3. Write NOTES.md after each day.
-4. Go version first. Python version after, from memory.
-5. Use `go run -race` on every concurrent program.
+4. Use `go run -race` on every concurrent program.
 
 ## Week 1 — Language Internals
 
