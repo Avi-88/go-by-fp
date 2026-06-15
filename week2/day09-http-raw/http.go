@@ -41,6 +41,15 @@ type HTTPRequest struct {
     Body    []byte
 }
 
+var statusText = map[int]string{
+    200: "OK",
+    201: "Created",
+    400: "Bad Request",
+    404: "Not Found",
+    405: "Method Not Allowed",
+    500: "Internal Server Error",
+}
+
 func ParseRequest(conn net.Conn) (HTTPRequest, error) {
 	r := bufio.NewReader(conn)
 	req := HTTPRequest{
@@ -105,3 +114,43 @@ func ParseRequest(conn net.Conn) (HTTPRequest, error) {
 	return req, nil
 }	
 
+
+func WriteResponse(conn net.Conn, status int, headers map[string]string, body []byte) error {
+	reason, ok := statusText[status]
+	if !ok {
+		return fmt.Errorf("Invalid status passed")
+	}
+	_, err := io.WriteString(conn, "HTTP/1.1 " +  strconv.Itoa(status) + " " + reason + "\r\n") 
+	if err != nil {
+		return fmt.Errorf("Could not add statusline to response -%w\n", err)
+	}
+	for k, v := range headers {
+		if strings.ToLower(k) == "content-length" {
+			continue
+		}
+		_, err := io.WriteString(conn, k +":" + " " + v + "\r\n") 
+		if err != nil {
+			return fmt.Errorf("Could not add headers to response -%w\n", err)
+		}
+	}
+
+	_, err = io.WriteString(conn, fmt.Sprintf("Content-Length: %d\r\n", len(body))) 
+	if err != nil {
+		return fmt.Errorf("Could not add headers to response -%w\n", err)
+	}
+	
+
+	_, err = io.WriteString(conn, "\r\n") 
+	if err != nil {
+		return fmt.Errorf("Could not add blank line to response -%w\n", err)
+	}
+
+	if len(body) != 0 {
+		_, err = conn.Write(body) 
+		if err != nil {
+			return fmt.Errorf("Could not add body to response -%w\n", err)
+		}
+	}
+
+	return nil
+}
